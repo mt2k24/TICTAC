@@ -1,5 +1,8 @@
 let boxes = document.querySelectorAll(".box");
 let resetbtn = document.querySelector("#reset-btn");
+let newGameBtn = document.querySelector("#new-btn");
+let msgContainer = document.querySelector("#.msg-container");
+let msg = document.querySelector("#msg");
 
 // Player turn(chance)
 let turnO = true; // Assuming it starts with player O
@@ -34,3 +37,17 @@ boxes.forEach((box) => {
 });
 
 
+
+const checkWinner = () => {
+    for (let pattern of winPatterns) {
+        let pos1Val = boxes[pattern[0]].innerText;
+        let pos2Val = boxes[pattern[1]].innerText;
+        let pos3Val = boxes[pattern[2]].innerText;
+
+        if (pos1Val != "" && pos2Val != "" && pos3Val != "") {
+            if (pos1Val === pos2Val && pos2Val === pos3Val) {
+                console.log("winner", pos1Val);
+            }
+        }
+    }
+};
