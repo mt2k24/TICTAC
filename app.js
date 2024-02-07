@@ -2,7 +2,7 @@ let boxes = document.querySelector(".box");
 let resetbtn = document.querySelector("#reset-btn");
 
 // Player turn(chance)
-let turnO = true; //playerX , playerO
+let turnO = true; // Assuming it starts with player O
 
 const winPatterns = [
     [0, 1, 2],
@@ -19,13 +19,14 @@ boxes.forEach((box) => {
     box.addEventListener("click", () => {
         console.log("box was clicked");
         if (turnO) {
-            // playerO
-            box.innerTeaxt = "O";
+            // player O's turn
+            box.innerText = "O";
         } else {
-            //playerX
-            box.innerTeaxt = "X";
-            turnO = true;
+            // player X's turn
+            box.innerText = "X";
         }
+        turnO = !turnO; // Toggle turn after each move
         box.disabled = true;
     });
 });
+
