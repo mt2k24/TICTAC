@@ -43,7 +43,7 @@ body {
     padding: 1rem;
     font-size: 1.25rem;
     background-color: #191913;
-    color: #ffffc7;
+    color: #fff;
     border-radius: 1rem;
     border: none;
 }
@@ -52,18 +52,23 @@ body {
     padding: 1rem;
     font-size: 1.25rem;
     background-color: #191913;
-    color: #ffffc7;
+    color: #fff;
     border-radius: 1rem;
     border: none;
 }
 
 #msg {
     color: #ffffc7;
-    font-size: 8vmin;
+    font-size: 5vmin;
 }
 
 .msg-container {
-    height: 30vmin;
+    height: 100vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 4rem;
 }
 
 .hide {

@@ -1,7 +1,7 @@
 let boxes = document.querySelectorAll(".box");
 let resetbtn = document.querySelector("#reset-btn");
 let newGameBtn = document.querySelector("#new-btn");
-let msgContainer = document.querySelector("#.msg-container");
+let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
 
 // Player turn(chance)
@@ -21,6 +21,12 @@ const winPatterns = [
 // Convert NodeList to Array
 boxes = Array.from(boxes);
 
+const resetGame = () => {
+    turnO = true;
+    enableBoxes();
+    msgContainer.classList.add("hide");
+};
+
 boxes.forEach((box) => {
     box.addEventListener("click", () => {
         console.log("box was clicked");
@@ -32,11 +38,29 @@ boxes.forEach((box) => {
             box.innerText = "X";
         }
         turnO = !turnO; // Toggle turn after each move
-        box.disabled = true;
+        box.disabled = true; // Disable the box after being clicked
+        checkWinner(); // Check for winner after each move
     });
 });
 
+const disableBoxes = () => {
+    for(let box of boxes) {
+        box.disabled = true;
+    }
+}
 
+const enableBoxes = () => {
+    for(let box of boxes) {
+        box.disabled = false;
+        box.innerText ="";
+    }
+}
+
+const showWinner = (winner) => {
+    msg.innerText = `Congratulation, winner is ${winner}`;
+    msgContainer.classList.remove("hide");
+    disableBoxes();
+};
 
 const checkWinner = () => {
     for (let pattern of winPatterns) {
@@ -46,8 +70,17 @@ const checkWinner = () => {
 
         if (pos1Val != "" && pos2Val != "" && pos3Val != "") {
             if (pos1Val === pos2Val && pos2Val === pos3Val) {
-                console.log("winner", pos1Val);
+                // There's a winner
+                console.log("Winner:", pos1Val);
+                // You can display the winner message or perform other actions here
+                showWinner(pos1Val)
             }
         }
     }
 };
+
+// Event listener for reset button
+resetbtn.addEventListener("click" , resetGame);
+
+// Event listener for new game button
+newGameBtn.addEventListener("click", resetGame);
