@@ -1,39 +1,41 @@
+/* Reset default margins and paddings for all elements */
 * {
-    padding: 0;
     margin: 0;
-    padding: 5px;
+    padding: 0;
+    box-sizing: border-box; /* Make sizing predictable */
 }
 
+/* Body styling: background color and center alignment */
 body {
     background-color: #548687;
     font-family: Arial, sans-serif;
     text-align: center;
 }
 
+/* Outer container holding the game */
 .container {
     height: 70vh;
-    /* For Game box sentering */
     display: flex;
-    /* flex-wrap: wrap; */
     justify-content: center;
     align-items: center;
 }
 
+/* Styling the game grid */
 .game {
     height: 60vmin;
     width: 60vmin;
-    /* Styleing for bOX ADDRESING */
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow boxes to wrap */
     justify-content: center;
     align-items: center;
-    gap: 1.5vmin;
+    gap: 1.5vmin; /* Space between boxes */
 }
 
+/* Styling each box (cell) */
 .box {
     height: 18vmin;
     width: 18vmin;
-    border-radius: 1rem;
+    border-radius: 1rem; /* Rounded corners */
     border: none;
     box-shadow: 0 0 1rem rgba(0,0,0,0.3);
     font-size: 8vmin;
@@ -46,14 +48,24 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Slight hover animation to feel interactive */
 .box:hover {
     transform: scale(1.05);
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.5);
 }
 
-#reset-btn {
+/* Container for reset buttons - flexbox for side-by-side */
+.buttons-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Wrap buttons on small screen */
+}
+
+/* Styling all major buttons */
+#reset-btn, #reset-scores-btn, #new-btn {
     padding: 1rem;
-    margin-bottom: 1rem;
     font-size: 1.25rem;
     background-color: #191913;
     color: #fff;
@@ -63,27 +75,18 @@ body {
     transition: all 0.3s ease;
 }
 
-#reset-btn:hover,
-#new-btn:hover {
+/* Button hover effect for better UX */
+#reset-btn:hover, #reset-scores-btn:hover, #new-btn:hover {
     background-color: #2d2d29;
 }
 
-#new-btn {
-    padding: 1rem;
-    font-size: 1.25rem;
-    background-color: #191913;
-    color: #fff;
-    border-radius: 1rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
+/* Message text styling */
 #msg {
     color: #ffffc7;
     font-size: 5vmin;
 }
 
+/* Winner message container */
 .msg-container {
     height: 100vmin;
     display: flex;
@@ -93,6 +96,37 @@ body {
     gap: 4rem;
 }
 
+/* Hide class to hide elements */
 .hide {
     display: none;
+}
+
+/* Scoreboard styling */
+.score-board {
+    margin: 20px 0;
+    font-size: 1.5rem;
+    color: #ffffc7;
+}
+
+/* Responsive Design: For mobile devices */
+@media (max-width: 600px) {
+    .game {
+        height: 80vmin;
+        width: 80vmin;
+        gap: 2vmin;
+    }
+
+    .box {
+        height: 22vmin;
+        width: 22vmin;
+        font-size: 10vmin;
+    }
+
+    .score-board {
+        font-size: 1.2rem;
+    }
+
+    #msg {
+        font-size: 7vmin;
+    }
 }

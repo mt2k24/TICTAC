@@ -1,73 +1,82 @@
+// --- Load scores from localStorage (feature: score saving even after refresh) ---
+let scoreO = localStorage.getItem('scoreO') ? parseInt(localStorage.getItem('scoreO')) : 0;
+let scoreX = localStorage.getItem('scoreX') ? parseInt(localStorage.getItem('scoreX')) : 0;
+
+// --- Grabbing DOM elements we will need ---
+const scoreOElement = document.getElementById("score-o");
+const scoreXElement = document.getElementById("score-x");
+const resetBtn = document.getElementById("reset-btn");
+const resetScoresBtn = document.getElementById("reset-scores-btn");
+const newGameBtn = document.getElementById("new-btn");
+const msgContainer = document.querySelector(".msg-container");
+const msg = document.getElementById("msg");
+
+// --- Selecting all boxes for game moves ---
 let boxes = document.querySelectorAll(".box");
-let resetbtn = document.querySelector("#reset-btn");
-let newGameBtn = document.querySelector("#new-btn");
-let msgContainer = document.querySelector(".msg-container");
-let msg = document.querySelector("#msg");
+boxes = Array.from(boxes); // Convert NodeList to Array for easier handling
 
-// Player turn(chance)
-let turnO = true; // Assuming it starts with player O
-
+// --- Winning patterns: these index combos mean someone has won ---
 const winPatterns = [
-    [0, 1, 2],
-    [0, 3, 6],
-    [0, 4, 8],
-    [1, 4, 7],
-    [2, 5, 8],
-    [2, 4, 6],
-    [3, 4, 5],
-    [6, 7, 8],
+    [0,1,2],[0,3,6],[0,4,8],[1,4,7],
+    [2,5,8],[2,4,6],[3,4,5],[6,7,8]
 ];
 
-// Convert NodeList to Array
-boxes = Array.from(boxes);
+// --- Display current scores when page loads ---
+scoreOElement.innerText = scoreO;
+scoreXElement.innerText = scoreX;
 
+// --- Variable to track whose turn it is (O always starts first) ---
+let turnO = true;
+
+// --- Reset just the board (without resetting scores) ---
 const resetGame = () => {
-    turnO = true;
-    enableBoxes();
-    msgContainer.classList.add("hide");
+    turnO = true; // Reset turn to O
+    enableBoxes(); // Enable all boxes and clear text
+    msgContainer.classList.add("hide"); // Hide the winner message
 };
 
-boxes.forEach((box) => {
-    box.addEventListener("click", () => {
-        console.log("box was clicked");
-        if (turnO) {
-            // player O's turn
-            box.innerText = "O";
-        } else {
-            // player X's turn
-            box.innerText = "X";
-        }
-        turnO = !turnO; // Toggle turn after each move
-        box.disabled = true; // Disable the box after being clicked
-        checkWinner(); // Check for winner after each move
-    });
-});
-
+// --- Disable all boxes (used after someone wins or draw) ---
 const disableBoxes = () => {
     for (let box of boxes) {
         box.disabled = true;
     }
-}
+};
 
+// --- Enable all boxes (used when starting a new game) ---
 const enableBoxes = () => {
     for (let box of boxes) {
         box.disabled = false;
         box.innerText = "";
     }
-}
-
-const showWinner = (winner) => {
-    msg.innerText = `Congratulation, winner is ${winner}`;
-    msgContainer.classList.remove("hide");
-    disableBoxes();
-    setTimeout(resetGame, 10000); // Reset the game after 10 seconds
 };
 
+// --- Display winner and update scores ---
+const showWinner = (winner) => {
+    msg.innerText = `Congratulations, winner is ${winner}`;
+    msgContainer.classList.remove("hide"); // Show winner message
+    disableBoxes(); // No more moves allowed
+
+    // Update the correct player's score
+    if (winner === "O") {
+        scoreO++;
+        localStorage.setItem('scoreO', scoreO);
+        scoreOElement.innerText = scoreO;
+    } else if (winner === "X") {
+        scoreX++;
+        localStorage.setItem('scoreX', scoreX);
+        scoreXElement.innerText = scoreX;
+    }
+
+    // Automatically reset the board after 5 seconds
+    setTimeout(resetGame, 5000);
+};
+
+// --- Check if the board is full and it's a draw ---
 const checkDraw = () => {
-    // Check if all boxes are filled
     return boxes.every(box => box.innerText !== "");
 };
 
+// --- Check if there is a winner after every move ---
 const checkWinner = () => {
     let winnerFound = false;
     for (let pattern of winPatterns) {
@@ -77,28 +86,48 @@ const checkWinner = () => {
 
         if (pos1Val !== "" && pos2Val !== "" && pos3Val !== "") {
             if (pos1Val === pos2Val && pos2Val === pos3Val) {
-                // There's a winner
-                console.log("Winner:", pos1Val);
-                // You can display the winner message or perform other actions here
-                showWinner(pos1Val);
+                showWinner(pos1Val); // Someone won
                 winnerFound = true;
-                break; // Exit the loop if there's a winner
+                break;
             }
         }
     }
 
-    // If no winner is found, check for a draw
+    // If no winner but board is full -> draw
     if (!winnerFound && checkDraw()) {
-        console.log("It's a draw!");
         msg.innerText = "It's a draw!";
         msgContainer.classList.remove("hide");
         disableBoxes();
-        setTimeout(resetGame, 10000); // Reset the game after 10 seconds
+        setTimeout(resetGame, 5000);
     }
 };
 
-// Event listener for reset button
-resetbtn.addEventListener("click", resetGame);
+// --- Event listener for each box when clicked ---
+boxes.forEach((box) => {
+    box.addEventListener("click", () => {
+        if (turnO) {
+            box.innerText = "O"; // Player O move
+        } else {
+            box.innerText = "X"; // Player X move
+        }
+        turnO = !turnO; // Switch turns
+        box.disabled = true; // Once clicked, disable the box
+        checkWinner(); // Check if the move won the game
+    });
+});
 
-// Event listener for new game button
+// --- Button event: Reset only the game board ---
+resetBtn.addEventListener("click", resetGame);
+
+// --- Button event: Start a new game from winner message ---
 newGameBtn.addEventListener("click", resetGame);
+
+// --- Button event: Reset scores completely ---
+resetScoresBtn.addEventListener("click", () => {
+    scoreO = 0;
+    scoreX = 0;
+    localStorage.removeItem('scoreO');
+    localStorage.removeItem('scoreX');
+    scoreOElement.innerText = scoreO;
+    scoreXElement.innerText = scoreX;
+});
